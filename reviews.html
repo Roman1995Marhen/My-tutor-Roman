@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Отзывы учеников Code Tutor: оцените пройденный курс, выберите проект обучения и оставьте комментарий.">
+  <meta name="theme-color" content="#0b1120">
+  <title>Отзывы — Code Tutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main>
+    <div class="container">
+      <header class="page-header">
+        <p class="page-header__label">Отзывы</p>
+        <h1 class="page-header__title">Поделитесь результатом обучения</h1>
+        <p class="page-header__desc">Оцените пройденный проект, оставьте комментарий и помогите будущим ученикам лучше понять формат занятий.</p>
+      </header>
+
+      <section class="reviews-layout">
+        <div class="review-panel">
+          <h2 class="info-block__title"><span class="info-block__icon">★</span>Оставить отзыв</h2>
+          <form class="form" id="review-form" name="reviews" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="reviews">
+            <p class="netlify-hidden">
+              <label>Не заполняйте это поле <input name="bot-field"></label>
+            </p>
+            <div class="form__group">
+              <label class="form__label" for="review-name">Ваше имя</label>
+              <input class="form__input" id="review-name" name="name" type="text" placeholder="Например, Алексей" required>
+            </div>
+
+            <div class="form__group">
+              <label class="form__label" for="review-course">Проект обучения</label>
+              <select class="form__select" id="review-course" name="course" required>
+                <option value="">Выберите проект</option>
+                <option>HTML + CSS (базовый курс)</option>
+                <option>JavaScript (с нуля до среднего уровня)</option>
+                <option>JavaScript (с среднего до высокого уровня)</option>
+                <option>JavaScript + HTML + CSS (с нуля до среднего уровня)</option>
+                <option>Python (с нуля до средного уровня)</option>
+                <option>Python (с среднего до высокого уровня)</option>
+                <option>SCSS + продвинутый CSS</option>
+                <option>JSON + работа с API</option>
+              </select>
+            </div>
+
+            <div class="form__group rating-input">
+              <span class="form__label">Оценка</span>
+              <div class="star-rating" role="radiogroup" aria-label="Оценка от 1 до 5">
+                <button class="star-btn" type="button" data-rating="1" role="radio" aria-checked="false" aria-label="1 звезда">★</button>
+                <button class="star-btn" type="button" data-rating="2" role="radio" aria-checked="false" aria-label="2 звезды">★</button>
+                <button class="star-btn" type="button" data-rating="3" role="radio" aria-checked="false" aria-label="3 звезды">★</button>
+                <button class="star-btn" type="button" data-rating="4" role="radio" aria-checked="false" aria-label="4 звезды">★</button>
+                <button class="star-btn" type="button" data-rating="5" role="radio" aria-checked="false" aria-label="5 звезд">★</button>
+              </div>
+              <input id="review-rating" name="rating" type="hidden" required>
+              <span class="rating-hint" id="rating-hint">Выберите оценку от 1 до 5</span>
+            </div>
+
+            <div class="form__group">
+              <label class="form__label" for="review-comment">Комментарий</label>
+              <textarea class="form__textarea" id="review-comment" name="comment" placeholder="Что понравилось, что получилось, какой был результат" required></textarea>
+            </div>
+
+            <button class="btn btn--primary" type="submit">Опубликовать отзыв</button>
+            <div class="form__success" id="review-success">Спасибо! Отзыв отправлен на модерацию и появится после проверки.</div>
+          </form>
+        </div>
+
+        <div class="review-panel">
+          <div class="reviews-summary">
+            <div class="reviews-summary__score" id="reviews-score">0.0</div>
+            <div>
+              <p class="reviews-summary__title">Средняя оценка</p>
+              <p class="reviews-summary__stars" id="reviews-stars">★★★★★</p>
+              <p class="card__text" id="reviews-count">Пока нет отзывов</p>
+            </div>
+          </div>
+          <div class="reviews-list" id="reviews-list">
+            <div class="empty-reviews">Отзывы появятся здесь после отправки формы.</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="cta-banner">
+        <h2 class="cta-banner__title">Хотите пройти обучение?</h2>
+        <p class="cta-banner__text">Посмотрите направления и выберите курс, который подходит под вашу цель.</p>
+        <a href="subjects.html" class="btn btn--warm">Смотреть обучение</a>
+      </div>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/components.js"></script><script>SiteComponents.inject();</script><script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0b1120">
+  <title>Модерация отзывов — Code Tutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main>
+    <div class="container">
+      <header class="page-header">
+        <p class="page-header__label">Админ</p>
+        <h1 class="page-header__title">Модерация отзывов</h1>
+        <p class="page-header__desc">Здесь можно посмотреть новые отзывы, одобрить их для публикации, скрыть или удалить.</p>
+      </header>
+
+      <section class="review-panel admin-panel">
+        <div class="admin-login">
+          <label class="form__label" for="admin-password">Пароль администратора</label>
+          <div class="admin-login__row">
+            <input class="form__input" id="admin-password" type="password" autocomplete="current-password" placeholder="Введите пароль">
+            <button class="btn btn--primary" id="admin-load" type="button">Загрузить</button>
+          </div>
+          <p class="card__text">Пароль проверяется через Netlify Function и не хранится в коде сайта.</p>
+        </div>
+
+        <div class="admin-status" id="admin-status" role="status"></div>
+
+        <div class="admin-summary" id="admin-summary" hidden>
+          <span class="status-badge status-badge--pending">На проверке: <b id="count-pending">0</b></span>
+          <span class="status-badge status-badge--approved">Опубликовано: <b id="count-approved">0</b></span>
+          <span class="status-badge status-badge--hidden">Скрыто: <b id="count-hidden">0</b></span>
+        </div>
+
+        <div class="reviews-list admin-reviews-list" id="admin-reviews-list">
+          <div class="empty-reviews">Введите пароль и загрузите отзывы.</div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/components.js"></script><script>SiteComponents.inject();</script>
+  <script>
+    (function () {
+      "use strict";
+
+      var passwordInput = document.getElementById("admin-password");
+      var loadButton = document.getElementById("admin-load");
+      var statusBox = document.getElementById("admin-status");
+      var list = document.getElementById("admin-reviews-list");
+      var summary = document.getElementById("admin-summary");
+      var counts = {
+        pending: document.getElementById("count-pending"),
+        approved: document.getElementById("count-approved"),
+        hidden: document.getElementById("count-hidden")
+      };
+      var apiUrl = "/.netlify/functions/admin-reviews";
+
+      function escapeHtml(value) {
+        return String(value || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function createStars(rating) {
+        var value = Number(rating) || 0;
+        return "★★★★★".slice(0, value) + "☆☆☆☆☆".slice(0, 5 - value);
+      }
+
+      function formatDate(value) {
+        if (!value) {
+          return "";
+        }
+
+        try {
+          return new Intl.DateTimeFormat("ru", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          }).format(new Date(value));
+        } catch (error) {
+          return value;
+        }
+      }
+
+      function setStatus(message, isError) {
+        statusBox.textContent = message || "";
+        statusBox.classList.toggle("admin-status--error", Boolean(isError));
+      }
+
+      function getPassword() {
+        return passwordInput.value.trim();
+      }
+
+      function request(method, payload) {
+        return fetch(apiUrl, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-password": getPassword()
+          },
+          body: payload ? JSON.stringify(payload) : undefined
+        }).then(function (response) {
+          return response.text().then(function (text) {
+            var data = {};
+            if (text) {
+              try {
+                data = JSON.parse(text);
+              } catch (error) {
+                throw new Error("Функция Netlify вернула не JSON. Статус: " + response.status + ".");
+              }
+            }
+
+            if (!response.ok) {
+              throw new Error(data.error || "Ошибка запроса. Статус: " + response.status + ".");
+            }
+            return data;
+          });
+        });
+      }
+
+      function updateSummary(reviews) {
+        var totals = reviews.reduce(function (acc, review) {
+          acc[review.status] = (acc[review.status] || 0) + 1;
+          return acc;
+        }, { pending: 0, approved: 0, hidden: 0 });
+
+        counts.pending.textContent = totals.pending || 0;
+        counts.approved.textContent = totals.approved || 0;
+        counts.hidden.textContent = totals.hidden || 0;
+        summary.hidden = false;
+      }
+
+      function statusLabel(status) {
+        if (status === "approved") {
+          return "Опубликован";
+        }
+        if (status === "hidden") {
+          return "Скрыт";
+        }
+        return "На проверке";
+      }
+
+      function renderReviews(reviews) {
+        updateSummary(reviews);
+
+        if (!reviews.length) {
+          list.innerHTML = '<div class="empty-reviews">Отзывов пока нет.</div>';
+          return;
+        }
+
+        list.innerHTML = reviews.map(function (review) {
+          return (
+            '<article class="review-card admin-review-card" data-id="' + escapeHtml(review.id) + '">' +
+            '<div class="review-card__top">' +
+            "<div>" +
+            '<p class="review-card__name">' + escapeHtml(review.name) + "</p>" +
+            '<p class="review-card__course">' + escapeHtml(review.course) + "</p>" +
+            '<p class="review-card__date">' + escapeHtml(formatDate(review.createdAt)) + "</p>" +
+            "</div>" +
+            '<div class="review-card__stars">' + createStars(review.rating) + "</div>" +
+            "</div>" +
+            '<p class="review-card__text">' + escapeHtml(review.comment) + "</p>" +
+            '<div class="admin-review-footer">' +
+            '<span class="status-badge status-badge--' + escapeHtml(review.status) + '">' + statusLabel(review.status) + "</span>" +
+            '<div class="admin-review-actions">' +
+            '<button class="btn btn--primary" type="button" data-action="approved">Одобрить</button>' +
+            '<button class="btn btn--outline" type="button" data-action="hidden">Скрыть</button>' +
+            '<button class="btn btn--outline" type="button" data-action="pending">На проверку</button>' +
+            '<button class="btn btn--warm" type="button" data-action="delete">Удалить</button>' +
+            "</div>" +
+            "</div>" +
+            "</article>"
+          );
+        }).join("");
+      }
+
+      function loadReviews() {
+        if (!getPassword()) {
+          setStatus("Введите пароль администратора.", true);
+          return;
+        }
+
+        if (window.location.protocol === "file:") {
+          setStatus("Админка работает после публикации на Netlify или запуска через netlify dev.", true);
+          return;
+        }
+
+        setStatus("Загружаем отзывы...", false);
+        list.innerHTML = '<div class="empty-reviews">Загружаем отзывы...</div>';
+
+        request("GET")
+          .then(function (data) {
+            renderReviews(Array.isArray(data.reviews) ? data.reviews : []);
+            setStatus("Отзывы загружены.", false);
+          })
+          .catch(function (error) {
+            setStatus(error.message || "Не удалось загрузить отзывы.", true);
+          });
+      }
+
+      loadButton.addEventListener("click", loadReviews);
+      passwordInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          loadReviews();
+        }
+      });
+
+      list.addEventListener("click", function (event) {
+        var button = event.target.closest("button[data-action]");
+        if (!button) {
+          return;
+        }
+
+        var card = button.closest("[data-id]");
+        var id = card ? card.dataset.id : "";
+        var action = button.dataset.action;
+
+        if (!id) {
+          return;
+        }
+
+        if (action === "delete" && !window.confirm("Удалить отзыв навсегда?")) {
+          return;
+        }
+
+        setStatus("Сохраняем изменение...", false);
+
+        request(action === "delete" ? "DELETE" : "PATCH", action === "delete" ? { id: id } : { id: id, status: action })
+          .then(loadReviews)
+          .catch(function (error) {
+            setStatus(error.message || "Не удалось сохранить изменение.", true);
+          });
+      });
+    })();
+  </script>
+</body>
+</html>

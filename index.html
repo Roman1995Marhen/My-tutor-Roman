@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Индивидуальные онлайн-занятия по HTML, CSS, SCSS, JavaScript, Python и JSON. Пробный урок 50 грн, понятная практика и поддержка.">
+  <meta name="theme-color" content="#0b1120">
+  <meta property="og:title" content="Code Tutor — Репетитор по программированию">
+  <meta property="og:description" content="Научу программировать с нуля и до результата: HTML, CSS, SCSS, JavaScript, Python и JSON.">
+  <meta property="og:type" content="website">
+  <title>Code Tutor — Репетитор по программированию</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <div class="hero__content">
+          <div class="hero__badge">
+            <span class="hero__badge-dot"></span>
+            Набор учеников открыт
+          </div>
+          <h1 class="hero__title">
+            Научу программировать<br><span>с нуля и до результата</span>
+          </h1>
+          <p class="hero__text">
+            Индивидуальные занятия по HTML, CSS, SCSS, JavaScript, Python и JSON.
+            Понятные объяснения, практика и поддержка на каждом этапе.
+          </p>
+          <div class="hero__actions">
+            <a href="booking.html" class="btn btn--primary">Записаться на урок</a>
+            <a href="about.html" class="btn btn--outline">Узнать обо мне</a>
+          </div>
+        </div>
+        <div class="hero__visual">
+          <div class="hero__card-stack">
+            <div class="hero__card hero__card--back">
+              <p class="hero__card-title">Технологии</p>
+              <div class="hero__tech-list">
+                <span class="tag">Python</span>
+                <span class="tag tag--warm">JavaScript</span>
+              </div>
+            </div>
+            <div class="hero__card hero__card--front">
+              <p class="hero__card-title">Чему учу</p>
+              <div class="hero__tech-list">
+                <span class="tag">HTML</span>
+                <span class="tag">CSS</span>
+                <span class="tag">SCSS</span>
+                <span class="tag tag--warm">JavaScript</span>
+                <span class="tag tag--warm">Python</span>
+                <span class="tag tag--green">JSON</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="trust-band" aria-label="Кратко о занятиях">
+        <div class="trust-card">
+          <span class="trust-card__num">4.9</span>
+          <span class="trust-card__label">средняя оценка учеников</span>
+        </div>
+        <div class="trust-card">
+          <span class="trust-card__num">50грн</span>
+          <span class="trust-card__label">пробный урок для знакомства</span>
+        </div>
+        <div class="trust-card">
+          <span class="trust-card__num">6</span>
+          <span class="trust-card__label">направлений обучения</span>
+        </div>
+        <div class="trust-card">
+          <span class="trust-card__num">24ч</span>
+          <span class="trust-card__label">обычное время ответа</span>
+        </div>
+      </section>
+
+      <section class="quick-nav">
+        <h2 class="quick-nav__title">Разделы сайта</h2>
+        <div class="quick-nav__grid">
+          <a href="about.html" class="quick-nav__item">
+            <span class="quick-nav__icon">👤</span>
+            <span class="quick-nav__label">Обо мне</span>
+            <span class="quick-nav__desc">Опыт, подход к обучению</span>
+          </a>
+          <a href="subjects.html" class="quick-nav__item">
+            <span class="quick-nav__icon">📚</span>
+            <span class="quick-nav__label">Обучение</span>
+            <span class="quick-nav__desc">Чему и как я учу</span>
+          </a>
+          <a href="pricing.html" class="quick-nav__item">
+            <span class="quick-nav__icon">💰</span>
+            <span class="quick-nav__label">Цены</span>
+            <span class="quick-nav__desc">Каталог и тарифы</span>
+          </a>
+          <a href="location.html" class="quick-nav__item">
+            <span class="quick-nav__icon">📍</span>
+            <span class="quick-nav__label">Где проходят уроки</span>
+            <span class="quick-nav__desc">Онлайн</span>
+          </a>
+          <a href="rules.html" class="quick-nav__item">
+            <span class="quick-nav__icon">📋</span>
+            <span class="quick-nav__label">Правила</span>
+            <span class="quick-nav__desc">Оплата и проведение пар</span>
+          </a>
+          <a href="booking.html" class="quick-nav__item">
+            <span class="quick-nav__icon">✏️</span>
+            <span class="quick-nav__label">Запись</span>
+            <span class="quick-nav__desc">Как записаться и отменить</span>
+          </a>
+          <a href="reviews.html" class="quick-nav__item">
+            <span class="quick-nav__icon">★</span>
+            <span class="quick-nav__label">Отзывы</span>
+            <span class="quick-nav__desc">Оценки и комментарии учеников</span>
+          </a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/components.js"></script>
+  <script>SiteComponents.inject();</script>
+  <script src="js/main.js"></script>
+</body>
+</html>
